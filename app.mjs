@@ -1,29 +1,56 @@
-import express from 'express';
-import log from '@ajar/marker';
+import express from "express";
+import log from "@ajar/marker";
+import morgan from "morgan";
+import nodemon from "nodemon";
 
 const { PORT, HOST } = process.env;
 
 // console.log(process.env);
 
-const app = express()
+const app = express();
 
+app.use(morgan("dev"));
 
-app.get('/',  (req, res) => {
-    res.status(200).send('Hello Express!')
-})
+app.get("/", (req, res) => {
+  res.status(200).send("Hello Express!");
+});
 
-app.get('/users', (req, res,next) => {
-    res.status(200).send('Get all Users')
-})
-
+app.get("/users", (req, res, next) => {
+  res.status(200).send("Get all Users");
+});
 
 // '/search?food=burger&town=ashdod'
 
-
-app.listen(PORT, HOST,  ()=> {
-    log.magenta(`🌎  listening on`,`http://${HOST}:${PORT}`);
+app.get("/homepage", (req, res) => {
+  res.status(200).send("This is my homepage");
 });
 
+app.get("/shows/:showID", (req, res) => {
+  res.status(200).send(`<h1> Next show is ${req.params.showID}</h1>`);
+});
+
+app.post("/shows", (req, res) => {
+  const { showName, show } = req.body;
+  res.status(200).json({ showName, message: `Show name is ${showName}` });
+});
+
+app.get("/api", (req, res) => {
+  const dataRes = { message: "Response" };
+  res.status(200).json(dataRes);
+});
+
+app.get("/hello", (req, res) => {
+  const output = `<h1>Hello Express</h1>`;
+  res.status(200).set("Content-Type", "text/html").send(output);
+});
+
+app.use((req, res) => {
+  res.status(404).send("Page not found");
+});
+
+app.listen(PORT, HOST, () => {
+  log.magenta(`🌎  listening on`, `http://${HOST}:${PORT}`);
+});
 
 //------------------------------------------
 //         Express Echo Server
