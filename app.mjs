@@ -1,13 +1,14 @@
 import express from "express";
 import log from "@ajar/marker";
 import morgan from "morgan";
-import nodemon from "nodemon";
 
 const { PORT, HOST } = process.env;
 
 // console.log(process.env);
 
 const app = express();
+
+app.use(express.json());
 
 app.use(morgan("dev"));
 
@@ -28,6 +29,8 @@ app.get("/homepage", (req, res) => {
 app.get("/shows/:showID", (req, res) => {
   res.status(200).send(`<h1> Next show is ${req.params.showID}</h1>`);
 });
+
+app.use(express.json());
 
 app.post("/shows", (req, res) => {
   const { showName, show } = req.body;
